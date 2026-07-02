@@ -4,9 +4,8 @@ st.title("나의 첫 웹앱")
 st.write("환영합니다.🤩")
 """
 
-
 import streamlit as st
- 
+
 # ----------------------------------------------------
 # 기본 설정
 # ----------------------------------------------------
@@ -15,14 +14,19 @@ st.set_page_config(
     page_icon="🧬",
     layout="centered",
 )
- 
+
 # ----------------------------------------------------
 # 데이터: MBTI별 포켓몬 & 추천 직업
 # (포켓몬 이미지는 PokeAPI 공식 아트워크 CDN 사용)
 # ----------------------------------------------------
 def poke_img(pid: int) -> str:
+    # jsDelivr 미러 CDN (raw.githubusercontent.com보다 접속이 안정적)
+    return f"https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/{pid}.png"
+
+
+def poke_img_fallback(pid: int) -> str:
     return f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pid}.png"
- 
+
 MBTI_DATA = {
     "INTJ": {"name": "뮤투", "id": 150, "emoji": "🧠", "desc": "냉철한 전략가",
               "jobs": [("전략 컨설턴트", "🧩"), ("데이터 사이언티스트", "📊"), ("스타트업 창업가", "🚀")]},
@@ -57,11 +61,11 @@ MBTI_DATA = {
     "ESFP": {"name": "푸린", "id": 39, "emoji": "🎤", "desc": "무대를 사랑하는 엔터테이너",
               "jobs": [("배우", "🎭"), ("가수", "🎤"), ("방송인", "📺")]},
 }
- 
+
 MBTI_GROUP_COLOR = {
     "NT": "#8b5cf6", "NF": "#22c55e", "SJ": "#3b82f6", "SP": "#f59e0b",
 }
- 
+
 def group_of(mbti: str) -> str:
     if mbti[1] == "N" and mbti[2] == "T":
         return "NT"
@@ -70,7 +74,7 @@ def group_of(mbti: str) -> str:
     if mbti[1] == "S" and mbti[3] == "J":
         return "SJ"
     return "SP"
- 
+
 # ----------------------------------------------------
 # 커스텀 CSS (그라데이션 배경, 애니메이션, 카드 효과)
 # ----------------------------------------------------
@@ -174,22 +178,22 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
- 
+
 # ----------------------------------------------------
 # 헤더
 # ----------------------------------------------------
 st.markdown('<p class="big-title">🔮 MBTI 포켓몬 직업 추천소 🧬</p>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">✨ 당신의 MBTI를 고르면, 꼭 닮은 포켓몬과 찰떡궁합 직업 3가지를 알려드려요! ⚡</p>', unsafe_allow_html=True)
- 
+
 if "selected_mbti" not in st.session_state:
     st.session_state.selected_mbti = None
- 
+
 # ----------------------------------------------------
 # MBTI 선택 버튼 (4x4 그리드)
 # ----------------------------------------------------
 mbti_list = list(MBTI_DATA.keys())
 rows = [mbti_list[i:i + 4] for i in range(0, len(mbti_list), 4)]
- 
+
 for row in rows:
     cols = st.columns(4)
     for col, mbti in zip(cols, row):
@@ -197,27 +201,28 @@ for row in rows:
             emoji = MBTI_DATA[mbti]["emoji"]
             if st.button(f"{emoji} {mbti}", key=f"btn_{mbti}"):
                 st.session_state.selected_mbti = mbti
- 
+
 # ----------------------------------------------------
 # 결과 출력
 # ----------------------------------------------------
 if st.session_state.selected_mbti:
     mbti = st.session_state.selected_mbti
     data = MBTI_DATA[mbti]
- 
+
     st.balloons()
- 
+
     st.markdown('<div class="result-card">', unsafe_allow_html=True)
     st.markdown(f"### {data['emoji']} {mbti} 유형의 포켓몬은...")
- 
+
     img_col1, img_col2, img_col3 = st.columns([1, 2, 1])
     with img_col2:
-        st.image(poke_img(data["id"]), use_container_width=True)
- 
+        st.image(poke_img(data["id"]), width=280)
+        st.caption(f"이미지가 안 보이면 [여기 클릭]({poke_img_fallback(data['id'])})해서 확인해 보세요 🔗")
+
     st.markdown(f'<p class="poke-name">🐾 {data["name"]}</p>', unsafe_allow_html=True)
     st.markdown(f'<p class="poke-desc">"{data["desc"]}"</p>', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
- 
+
     st.markdown("#### 💼 이 유형에게 찰떡인 추천 직업 3가지")
     job_cols = st.columns(3)
     for jcol, (job, jemoji) in zip(job_cols, data["jobs"]):
@@ -231,7 +236,7 @@ if st.session_state.selected_mbti:
                 """,
                 unsafe_allow_html=True,
             )
- 
+
     st.markdown(
         f"<p style='text-align:center; color:#e9d5ff; margin-top:1.4rem;'>"
         f"🎉 {mbti}는 <b>{data['name']}</b>처럼 매력적인 존재군요! 자신에게 딱 맞는 커리어를 찾아보세요 🚀</p>",
@@ -239,11 +244,10 @@ if st.session_state.selected_mbti:
     )
 else:
     st.info("👆 위에서 자신의 MBTI 버튼을 눌러보세요!")
- 
+
 st.markdown(
     "<hr style='border-color: rgba(255,255,255,0.2);'>"
     "<p style='text-align:center; color:#c4b5fd; font-size:0.85rem;'>"
     "Made with 💜 Streamlit | 포켓몬 이미지 출처: PokeAPI</p>",
     unsafe_allow_html=True,
 )
- 
