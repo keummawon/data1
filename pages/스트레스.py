@@ -15,7 +15,22 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-DATA_DIR = Path(__file__).parent / "data"
+def _find_data_dir() -> Path:
+    """data 폴더를 스크립트 위치 기준으로 유연하게 찾는다.
+    (멀티페이지 앱에서 이 파일이 pages/ 하위로 이동해도 동작하도록 여러 경로 후보를 검사)"""
+    here = Path(__file__).resolve().parent
+    candidates = [
+        here / "data",
+        here.parent / "data",          # pages/xxx.py 인 경우 저장소 루트
+        here.parent.parent / "data",
+    ]
+    for c in candidates:
+        if (c / "personal_worries_seoul_long.csv").exists():
+            return c
+    return candidates[0]  # 못 찾으면 기본값(에러 메시지에서 안내)
+
+
+DATA_DIR = _find_data_dir()
 
 WORRY_COLS = [
     "경제 관련 문제", "건강", "자녀양육", "노후생활", "가족간 문제", "공부",
@@ -49,7 +64,17 @@ CAT_EMOJI = {"성별": "🚻", "연령별": "🎂", "학력별": "🎓", "소득
 # ----------------------------------------------------------------------------------
 @st.cache_data
 def load_default_data():
-    return pd.read_csv(DATA_DIR / "personal_worries_seoul_long.csv")
+    csv_path = DATA_DIR / "personal_worries_seoul_long.csv"
+    if not csv_path.exists():
+        st.error(
+            f"기본 데이터 파일을 찾을 수 없습니다: `{csv_path}`\n\n"
+            "저장소에 `data/personal_worries_seoul_long.csv` 파일이 이 스크립트와 같은 위치(또는 저장소 루트) "
+            "`data` 폴더 안에 있는지 확인해 주세요. 멀티페이지 앱(`pages/` 폴더)을 쓰는 경우, "
+            "`data` 폴더는 저장소 최상위(= app.py가 있는 곳)에 두시면 자동으로 인식됩니다.\n\n"
+            "임시로 사이드바에서 CSV를 직접 업로드해 사용하실 수도 있습니다."
+        )
+        st.stop()
+    return pd.read_csv(csv_path)
 
 
 @st.cache_data
