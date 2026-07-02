@@ -3,7 +3,6 @@ import streamlit as st
 st.title("나의 첫 웹앱")
 st.write("환영합니다.🤩")
 """
-
 import streamlit as st
 
 # ----------------------------------------------------
@@ -82,62 +81,72 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 40%, #7c3aed 70%, #db2777 100%);
-        background-size: 400% 400%;
-        animation: gradientShift 15s ease infinite;
+        background:
+            radial-gradient(circle at 15% 20%, rgba(236, 72, 153, 0.35) 0%, transparent 40%),
+            radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.30) 0%, transparent 45%),
+            radial-gradient(circle at 50% 90%, rgba(251, 191, 36, 0.22) 0%, transparent 45%),
+            linear-gradient(160deg, #0b0f2b 0%, #1a1040 35%, #2b0f4a 65%, #170a2e 100%);
+        background-size: 200% 200%, 200% 200%, 200% 200%, 400% 400%;
+        animation: gradientShift 18s ease infinite;
     }
     @keyframes gradientShift {
-        0% {background-position: 0% 50%;}
-        50% {background-position: 100% 50%;}
-        100% {background-position: 0% 50%;}
+        0% {background-position: 0% 50%, 100% 0%, 50% 100%, 0% 50%;}
+        50% {background-position: 100% 50%, 0% 100%, 50% 0%, 100% 50%;}
+        100% {background-position: 0% 50%, 100% 0%, 50% 100%, 0% 50%;}
     }
     .big-title {
         text-align: center;
-        font-size: 2.6rem;
+        font-size: 2.7rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #fde68a, #fca5a5, #a78bfa, #6ee7b7);
+        background: linear-gradient(90deg, #fb7185, #fbbf24, #38bdf8, #c084fc);
         background-size: 300% auto;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: shine 4s linear infinite;
+        animation: shine 5s linear infinite;
         margin-bottom: 0;
+        text-shadow: 0 0 30px rgba(251, 113, 133, 0.35);
+        filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.25));
     }
     @keyframes shine {
         to { background-position: 300% center; }
     }
     .subtitle {
         text-align: center;
-        color: #e9d5ff;
+        color: #d8cdfa;
         font-size: 1.05rem;
         margin-top: 0.2rem;
         margin-bottom: 1.6rem;
+        text-shadow: 0 0 12px rgba(192, 132, 252, 0.3);
     }
     div.stButton > button {
         width: 100%;
         border-radius: 14px;
-        border: 2px solid rgba(255,255,255,0.25);
-        background: rgba(255,255,255,0.08);
-        color: #fff;
+        border: 1.5px solid rgba(192, 132, 252, 0.35);
+        background: linear-gradient(160deg, rgba(45, 27, 78, 0.75), rgba(20, 14, 45, 0.75));
+        color: #f3e8ff;
         font-weight: 700;
         padding: 0.6rem 0.2rem;
         transition: all 0.25s ease;
-        backdrop-filter: blur(6px);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.35);
     }
     div.stButton > button:hover {
         transform: translateY(-4px) scale(1.04);
-        border-color: #fde68a;
-        background: rgba(255,255,255,0.2);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+        border-color: #fbbf24;
+        background: linear-gradient(160deg, rgba(236, 72, 153, 0.35), rgba(56, 189, 248, 0.25));
+        box-shadow: 0 0 22px rgba(251, 191, 36, 0.45), 0 8px 20px rgba(0,0,0,0.45);
+        color: #fff;
     }
     .result-card {
-        background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(255,255,255,0.25);
+        background: linear-gradient(160deg, rgba(45, 27, 78, 0.55), rgba(15, 10, 35, 0.65));
+        border: 1px solid rgba(192, 132, 252, 0.35);
         border-radius: 22px;
         padding: 1.6rem;
         text-align: center;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(14px);
         animation: popIn 0.5s ease;
         margin-top: 1rem;
+        box-shadow: 0 0 40px rgba(236, 72, 153, 0.15), 0 8px 32px rgba(0,0,0,0.4);
     }
     @keyframes popIn {
         0% { transform: scale(0.85); opacity: 0; }
@@ -148,26 +157,29 @@ st.markdown(
         font-weight: 800;
         color: #fff;
         margin-top: 0.4rem;
+        text-shadow: 0 0 18px rgba(56, 189, 248, 0.5);
     }
     .poke-desc {
-        color: #fde68a;
+        color: #fbbf24;
         font-size: 1.1rem;
         margin-bottom: 0.6rem;
+        text-shadow: 0 0 10px rgba(251, 191, 36, 0.35);
     }
     .job-card {
-        background: rgba(255,255,255,0.12);
+        background: linear-gradient(160deg, rgba(56, 189, 248, 0.16), rgba(236, 72, 153, 0.14));
         border-radius: 16px;
         padding: 1rem 0.5rem;
         text-align: center;
         color: #fff;
         font-weight: 700;
-        border: 1px solid rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.22);
         transition: transform 0.25s ease, box-shadow 0.25s ease;
         animation: floatUp 0.6s ease;
     }
     .job-card:hover {
         transform: translateY(-6px) scale(1.05);
-        box-shadow: 0 10px 24px rgba(0,0,0,0.4);
+        border-color: #fbbf24;
+        box-shadow: 0 0 24px rgba(251, 191, 36, 0.4), 0 10px 24px rgba(0,0,0,0.4);
     }
     @keyframes floatUp {
         0% { transform: translateY(15px); opacity: 0; }
